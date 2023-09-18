@@ -1,0 +1,17 @@
+Create a python class 'Thought' which has a contructor taking
+a 'queue' argument, a JSON object 'state', and a string 'model_name'.
+
+It should import json package, and a ThinkGPT library (installed)
+
+It should have data fields:
+state - JSON 
+llm - a ThinkGPT instance 
+query - string 
+reply - JSON 
+
+It should have methods:
+'teach' with string argument and void return
+'get_state' with JSON object argument and void return
+'set_state' with no argument and JSON object return
+'get_query' with JSON object argument and void return
+'set_reply' with JSON object argument and void return
