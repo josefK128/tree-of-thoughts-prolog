@@ -4,48 +4,49 @@
 % Facts *******************************************
 % Initial facts describing the world of 'Nani search' 
 % These clauses are dynamic so can be modified by assert and retract
-:- dynamic location2/2.
-:- dynamic here1/1.
-:- dynamic have1/1.
+:- dynamic location/2.
+:- dynamic here/1.
+:- dynamic have/1.
 
 % dynamic STATE
 % locations - location(X,Y) => X is in Y
-% NOTE: findall/3 returns all solutions - findall([T,P], location2(T,P), S).
+% NOTE: findall/3 returns all solutions - findall([T,P], location(T,P), S).
 % returns all pairs below
-% NOTE: findall/3 returns all solutions - findall(T, location2(T,office), S).
+% NOTE: findall/3 returns all solutions - findall(T, location(T,office), S).
 % returns [computer,desk]
-location2(computer, office).
-location2(desk, office).   
-location2(flashlight, desk).    %retractable
-location2(breadbox, kitchen).
-location2(bread, breadbox).
-location2(washing_machine, cellar).
-location2(nani, washing_machine).   %retractable
+location(computer, office).
+location(desk, office).   
+location(flashlight, desk).    %retractable
+location(breadbox, kitchen).
+location(bread, breadbox).
+location(washing_machine, cellar).
+location(nani, washing_machine).   %retractable
 
 % present location of self
-here1(kitchen).
+here(kitchen).
 
-% have1 - items taken from Place or removed from Thing - initially none - false
+% have - items taken from Place or removed from Thing - initially none - false
 
 
 
 % static STATE
 % rooms
-room1(office).
-room1(kitchen).
-room1(dining_room).
-room1(hall).
-room1(cellar).
+room(office).
+room(kitchen).
+room(dining_room).
+room(hall).
+room(cellar).
 
 % room connections - doors
-door2(office,hall).
-door2(hall,dining_room).
-door2(dining_room,kitchen).
-door2(kitchen,cellar).
-door2(kitchen,office).
+door(office,hall).
+door(hall,dining_room).
+door(dining_room,kitchen).
+door(kitchen,cellar).
+door(kitchen,office).
 
 % can_carry
 can_carry(flashlight).
+can_carry(bread).
 can_carry(nani).
 
 
@@ -53,15 +54,15 @@ can_carry(nani).
 
 % Rules *******************************************
 % self-orientation
-where_am_I1(P) :-
-  here1(P).
-where_am_i1(P) :-
-  here1(P).
+where_am_I(P) :-
+  here(P).
+where_am_i(P) :-
+  here(P).
 
 
 % connection rules
-connect2(X,Y):- door2(X,Y).
-connect2(X,Y):- door2(Y,X).
+connect(X,Y):- door(X,Y).
+connect(X,Y):- door(Y,X).
 
 
 % action rules **********************************
@@ -73,48 +74,35 @@ connect2(X,Y):- door2(Y,X).
 %    ;  
 %        Z = X  
 % ).
-can_go1(Place) :-
+can_go(Place) :-
   (Place = cellar ->
-      here1(P),
-      connect2(P,Place),
-      have1(flashlight)
+      here(P),
+      connect(P,Place),
+      have(flashlight)
   ;
-      here1(P),
-      connect2(P,Place)
+      here(P),
+      connect(P,Place)
   ).
 
 
-go1(Place) :-
-  can_go1(Place),
-  retract(here1(_)),
-  asserta(here1(Place)),
+go(Place) :-
+  can_go(Place),
+  retract(here(_)),
+  asserta(here(Place)),
   write('now you are in '), write(Place), nl.
 
 
-% take Thing from Place
-can_take2(Thing, Place) :-
-  here1(Place),
-  can_carry(Thing),
-  location2(Thing, Place).
-
-take2(Thing, Place) :-
-  can_take2(Thing, Place),
-  retract(location2(Thing,Place)), 
-  asserta(have1(Thing)),
-  write(Thing), write(' taken from present location in '), write(Place), nl.
-
-
 % remove Thing from Thing
-can_remove2(X, Thing) :-
-  here1(Place),
-  location2(Thing, Place),
-  location2(X, Thing),
+can_remove(X, Thing) :-
+  here(Place),
+  location(Thing, Place),
+  location(X, Thing),
   can_carry(X).
 
-remove2(X, Thing) :-
-  can_remove2(X, Thing),
-  retract(location2(X,Thing)), 
-  asserta(have1(X)),
+remove(X, Thing) :-
+  can_remove(X, Thing),
+  retract(location(X,Thing)), 
+  asserta(have(X)),
   (X = nani ->
     write('Nani taken - congratulations - you win!!!!!!')
   ;
