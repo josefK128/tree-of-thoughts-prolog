@@ -1,8 +1,5 @@
 # @ToT-prolog README.md
 
-* code for example tree-of-thoughts pompting/reasoning methodology
-using a 'world' consisting of a Prolog knowledge base (facts and rules)
-
 * The package uses a venv virtual environment (env/) - to create env run:
 ```py -m venv env```  
 
@@ -14,6 +11,6 @@ using a 'world' consisting of a Prolog knowledge base (facts and rules)
 (see venv documentation for very similar script commands for Linux, etc.) 
 
 * module is run by:
-```> py world-thought.py```
+```> py agent.py nani.pl```
 
 
